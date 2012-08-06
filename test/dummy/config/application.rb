@@ -7,7 +7,7 @@ require "action_view/railtie"
 require "action_mailer/railtie"
 
 Bundler.require
-require "wicked"
+require "wicked-focused"
 
 module Dummy
   class Application < Rails::Application

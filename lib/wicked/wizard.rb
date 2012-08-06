@@ -3,8 +3,11 @@ module Wicked
     extend ActiveSupport::Concern
 
     included do
-      focused_action :index, "{self.name}::Action".constantize do
-        redirect_to wizard_path(steps.first)
+      use_focused_macros
+      focused_action :index, "#{self.name}::Action".constantize do
+        run do
+          redirect_to wizard_path(steps.first)
+        end
       end 
 
       wizard_actions     
@@ -12,13 +15,16 @@ module Wicked
 
     module ClassMethods
       def wizard_actions
-        "{self.name}::Action".constantize.wizard_steps.each do |step|
+        clazz = "#{self.name}::Action".constantize
+        steps = clazz.wizard_steps
+        raise "No wizard steps defined for #{clazz}" if steps.blank?
+        steps.each do |step|
           wizard_action step
         end
       end
 
       def wizard_action action, &block
-        focused_action action, "{self.name}::Action".constantize, &block
+        focused_action action, "#{self.name}::Action".constantize, &block
       end
     end
   end

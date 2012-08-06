@@ -1,7 +1,6 @@
 module Wicked::Controller::Concerns::Path
   extend ActiveSupport::Concern
 
-
   def next_wizard_path(options = {})
     wizard_path(@next_step, options)
   end
@@ -17,7 +16,6 @@ module Wicked::Controller::Concerns::Path
   def wicked_action
     params[:action]
   end
-
 
   def wizard_path(goto_step = nil, options = {})
     options = { :controller => wicked_controller,

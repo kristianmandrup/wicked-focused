@@ -49,8 +49,9 @@ module Wicked::Controller::Concerns::Steps
     def steps(*args)
       options = args.last.is_a?(Hash) ? callbacks.pop : {}
       steps   = args
+      @wizard_steps = args
       prepend_before_filter(options) do
-        @wizard_steps = steps
+        self.steps = steps
       end
     end
   end
