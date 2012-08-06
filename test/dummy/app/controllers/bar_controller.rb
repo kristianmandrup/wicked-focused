@@ -1,13 +1,12 @@
 ## This controller uses includes
 
 module BarController
-  class Action < FocusedAction
-    include Wicked::Action
-
+  use_wicked_macros
+  
+  wicked_base_action do
     steps :first, :second, :last_step
-  end
-  include Wicked::Wizard  
-
+  end    
+  
   wizard_action :show do
     wizard do
       skip_step if params[:skip_step]

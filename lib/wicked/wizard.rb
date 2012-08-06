@@ -9,17 +9,12 @@ module Wicked
           redirect_to wizard_path(steps.first)
         end
       end 
-
-      # wizard_actions     
     end
 
     module ClassMethods
-      def wizard_actions
-        clazz = "#{self.name}::Action".constantize
-        steps = clazz.wizard_steps
-        raise "No wizard steps defined for #{clazz}" if steps.blank?
-        steps.each do |step|
-          wizard_action step
+      def wizard_actions *names
+        names.each do |name|
+          wizard_action name
         end
       end
 

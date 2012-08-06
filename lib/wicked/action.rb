@@ -38,6 +38,7 @@ module Wicked
       @step          = params[:id].try(:to_sym) || steps.first
       @previous_step = previous_step(@step)
       @next_step     = next_step(@step)   
+      @redirect_path
     end
 
     def wizard_redirect

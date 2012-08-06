@@ -56,7 +56,6 @@ Next include `Wicked::Wizard` in your controller
     end
 
     # creates Focused Action :index 
-    # calls #wizard_actions macro to generate wizard actions for all steps defined in Action class
     include Wicked::Wizard 
 
 ```
@@ -65,24 +64,25 @@ The wizard is set to call steps in order in the show action, you can specify cus
 
 ```ruby
 class AfterSignupController
-    class Action < FocusedAction
-      include Wizard::Action
+  class Action < FocusedAction
+    include Wizard::Action
 
-      steps :confirm_password, :confirm_profile, :find_friends    
-    end
-    include Wicked::Wizard 
+    steps :confirm_password, :confirm_profile, :find_friends    
+  end
+  include Wicked::Wizard 
 
-    wizard_action :show do
-      def run
-        @user = current_user
-        case step
-        when :find_friends
-          @friends = @user.find_friends
-        end
-        render_wizard
+  class Show < Action
+    def run
+      wizard_redirect and return if super()
+      @user = current_user
+      case step
+      when :find_friends
+        @friends = @user.find_friends
       end
+      render_wizard
     end
   end
+end
 ```
 
 **Note:** Wicked uses the `:id` parameter to control the flow of steps, if you need to have an id parameter, please use nested routes see [Partial Validation of Active Record Objects](https://github.com/schneems/wicked/wiki/Partial-Validation-of-Active-Record-Objects) for an example. It will need to be prefixed, for example a Product's `:id` would be `:product_id`
@@ -104,33 +104,31 @@ You can manually specify which wizard action you want to link to by using the wi
 ```
 
 In addition to showing sequential views we can update elements in our controller.
-
+Note: Here we demonstrate the use of wicked macros.
 
 ```ruby
 class AfterSignupController
-    class Action < FocusedAction
-      include Wizard::Action
+  use_wicked_macros
+  
+  wicked_base_action do
+    steps :confirm_password, :confirm_profile, :find_friends
+  end    
 
-      steps :confirm_password, :confirm_profile, :find_friends    
-    end
-    include Wicked::Wizard 
-
-    wizard_action :update do
-      def run
-        @user = current_user
-        case step
-        when :confirm_password
-          @user.update_attributes(params[:user])
-        end
-        sign_in(@user, :bypass => true) # needed for devise
-        render_wizard @user
+  wizard_action :update do
+    wizard do
+      @user = current_user
+      case step
+      when :confirm_password
+        @user.update_attributes(params[:user])
       end
+      sign_in(@user, :bypass => true) # needed for devise
+      render_wizard @user
     end
   end
+end
 ```
 
 We're passing `render_wizard` our `@user` object here. If you pass an object into `render_wizard` it will show the next step if the object saves or re-render the previous view if it does not save.
-
 
 To get to this update action, you simply need to submit a form that PUT's to the same url
 
@@ -147,22 +145,23 @@ To get to this update action, you simply need to submit a form that PUT's to the
 
 We explicitly tell the form to PUT above. If you forget this, you will get a warning about the create action not existing, or no route found for POST. Don't forget this.
 
-
 In the controller if you find that you want to skip a step, you can do it simply by calling `skip_step`
 
 ```ruby
 
   wizard_action :show do
-    @user = current_user
-    case step
-    when :find_friends
-      if @user.has_facebook_access_token?
-        @friends = @user.find_friends
-      else
-        skip_step
+    wizard do
+      @user = current_user
+      case step
+      when :find_friends
+        if @user.has_facebook_access_token?
+          @friends = @user.find_friends
+        else
+          skip_step
+        end
       end
+      render_wizard
     end
-    render_wizard
   end
 
 ```
@@ -171,7 +170,23 @@ Now you've got a fully functioning AfterSignup controller! If you have questions
 
 ## Quick Reference
 
-View/URL Helpers
+*Macros*
+
+`use_wicked_macros` enables use of the Wicked macros. Otherwise you must explicitly create equivalent classes and methods.
+
+`wicked_base_action name, &block`
+
+Created the Focused Controller action base class, from which any Wizard Action class will inherit from.
+
+`wizard_action name, &block` 
+
+Creates a Focused Controller action class inheriting from the base action class of the controller. The block contains the class definition. 
+
+`wizard`
+
+Creates a `#run` method as "required" by a Focused Controller action class. The run method generated calls super which calls `setup_wizard` and also auto-handles redirects.
+
+*View/URL Helpers*
 
 ```ruby
 
@@ -184,8 +199,7 @@ View/URL Helpers
   # You can have multiple wizards in a project with multiple `wizard_path` calls
 ```
 
-
-Controller Tidbits:
+*Controller Tidbits:*
 
 ```ruby
   steps  :first, :second       # Sets the order of steps
@@ -195,7 +209,6 @@ Controller Tidbits:
   render_wizard                # Renders the current step
   render_wizard(@user)         # Shows next_step if @user.save, otherwise renders current step
 ```
-
 
 Finally:
 
@@ -210,7 +223,6 @@ Don't forget to create your named views
       # ...
 ```
 
-
 # Finish Wizard Path
 
 You can specify the url that your user goes to by over-riding the `finish_wizard_path` in your wizard controller action.
@@ -222,7 +234,6 @@ You can specify the url that your user goes to by over-riding the `finish_wizard
   end
 ```
 
-
 ### Testing with RSpec
 
 ```ruby
@@ -232,8 +243,6 @@ You can specify the url that your user goes to by over-riding the `finish_wizard
   # Test find_friends block of update action
   put :update, {'id' => 'find_friends', "user" => { "id" => @user.id.to_s }}
 ```
-
-
 
 ## About
 
