@@ -31,6 +31,7 @@ Gem::Specification.new do |s|
     "lib/wicked/controller/concerns/render_redirect.rb",
     "lib/wicked/controller/concerns/steps.rb",
     "lib/wicked/engine.rb",
+    "lib/wicked/macros.rb",
     "lib/wicked/wizard.rb",
     "test/dummy/Rakefile",
     "test/dummy/app/controllers/application_controller.rb",
