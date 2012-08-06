@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/kristianmandrup/focused_controller.git
-  revision: d97e5feefdc18b3b3aeab5ff94cfb64e7f00845a
+  revision: 729d753a62abf4eadcfd76123f643973392bec3a
   specs:
     focused_controller (0.1.0)
       actionpack (~> 3.0)

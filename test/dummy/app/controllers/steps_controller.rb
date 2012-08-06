@@ -9,7 +9,7 @@ module StepPositionsController
   include Wicked::Wizard  
 
   wizard_action :show do
-    run do
+    wizard do
       render_wizard
     end
   end

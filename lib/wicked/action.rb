@@ -13,26 +13,43 @@ module Wicked
                     :step,            :wizard_steps,     :current_step?,
                     :past_step?,      :future_step?,     :previous_step?,
                     :next_step?
-
-      expose(:step)           { current_step || steps.first }    
-      expose(:previous_step)  { previous_step(step) }
-      expose(:next_step)      { next_step(step) }
     end
 
     # any subclass (Action class) should call super!
     def run
-      setup_wizard
+      setup_wizard      
+    end
+
+    module ClassMethods
+      def wizard &block
+        define_method :run do
+          wizard_redirect and return if super()
+          instance_eval &block
+        end
+      end
     end
 
     protected
 
     def setup_wizard
-      redirect_to wizard_path(steps.first) if first_step?
-      redirect_to wizard_path(steps.last)  if last_step?
+      @redirect_path = wizard_path(steps.first) if first_step? && !on_first_step?
+      @redirect_path = wizard_path(steps.last)  if last_step? && !on_last_step?
+
+      @step          = params[:id].try(:to_sym) || steps.first
+      @previous_step = previous_step(@step)
+      @next_step     = next_step(@step)   
     end
 
-    def current_step
-      params[:id].try(:to_sym)
+    def wizard_redirect
+      redirect_to @redirect_path if @redirect_path
+    end
+
+    def on_first_step?
+      step == steps.first
+    end
+
+    def on_last_step?
+      step == steps.first
     end
 
     def first_step?

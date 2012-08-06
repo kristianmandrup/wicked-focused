@@ -10,7 +10,7 @@ module Wicked
         end
       end 
 
-      wizard_actions     
+      # wizard_actions     
     end
 
     module ClassMethods

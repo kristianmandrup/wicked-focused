@@ -8,10 +8,10 @@ Gem::Specification.new do |s|
   s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["schneems"]
+  s.authors = ["kristianmandrup", "schneems"]
   s.date = "2012-08-06"
-  s.description = "Wicked is a Rails engine for producing easy Focused Controller based wizards"
-  s.email = "richard.schneeman@gmail.com"
+  s.description = "Rails engine for producing Focused Controller based wizards"
+  s.email = "kmandrup@gmail.com"
   s.extra_rdoc_files = [
     "README.md"
   ]
@@ -25,8 +25,7 @@ Gem::Specification.new do |s|
     "README.md",
     "Rakefile",
     "VERSION",
-    "app/controllers/wicked/wizard_controller.rb",
-    "lib/wicked.rb",
+    "lib/wicked-focused.rb",
     "lib/wicked/action.rb",
     "lib/wicked/controller/concerns/path.rb",
     "lib/wicked/controller/concerns/render_redirect.rb",
@@ -68,6 +67,7 @@ Gem::Specification.new do |s|
     "test/dummy/config/initializers/mime_types.rb",
     "test/dummy/config/initializers/secret_token.rb",
     "test/dummy/config/initializers/session_store.rb",
+    "test/dummy/config/initializers/wicked.rb",
     "test/dummy/config/locales/en.yml",
     "test/dummy/config/routes.rb",
     "test/dummy/public/404.html",
@@ -89,7 +89,8 @@ Gem::Specification.new do |s|
     "test/integration/steps_test.rb",
     "test/support/integration_case.rb",
     "test/test_helper.rb",
-    "test/wicked_test.rb"
+    "test/wicked_test.rb",
+    "wicked-focused.gemspec"
   ]
   s.homepage = "http://github.com/schneems/wicked"
   s.licenses = ["MIT"]

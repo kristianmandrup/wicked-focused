@@ -40,9 +40,9 @@ Jeweler::Tasks.new do |gem|
   gem.homepage    = "http://github.com/schneems/wicked"
   gem.license     = "MIT"
   gem.summary     = %Q{Use Wicked to turn your Focused Controller into a wizard}
-  gem.description = %Q{Wicked is a Rails engine for producing easy Focused Controller based wizards}
-  gem.email       = "richard.schneeman@gmail.com"
-  gem.authors     = ["schneems"]
+  gem.description = %Q{Rails engine for producing Focused Controller based wizards}
+  gem.email       = "kmandrup@gmail.com"
+  gem.authors     = ["kristianmandrup", "schneems"]
   # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new

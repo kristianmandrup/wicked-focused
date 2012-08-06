@@ -9,7 +9,7 @@ module JumpController
   include Wicked::Wizard  
 
   wizard_action :show do
-    run do
+    wizard do
       skip_step if params[:skip_step]
       jump_to :last_step if params[:jump_to]
       if params[:resource]

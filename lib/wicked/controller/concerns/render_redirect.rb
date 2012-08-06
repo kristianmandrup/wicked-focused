@@ -4,7 +4,6 @@ module Wicked::Controller::Concerns::RenderRedirect
 
   def render_wizard(resource = nil, options = {})
     process_resource!(resource)
-
     if @skip_to
       redirect_to wizard_path(@skip_to), options
     else

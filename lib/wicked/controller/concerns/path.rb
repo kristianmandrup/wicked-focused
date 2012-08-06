@@ -10,7 +10,11 @@ module Wicked::Controller::Concerns::Path
   end
 
   def wicked_controller
-    params[:controller]
+    self.class.name.sub(/::\w+$/, '')
+  end
+
+  def wicked_controller_name
+    wicked_controller.sub(/Controller$/, '').gsub('::', '_').underscore
   end
 
   def wicked_action
@@ -18,11 +22,8 @@ module Wicked::Controller::Concerns::Path
   end
 
   def wizard_path(goto_step = nil, options = {})
-    options = { :controller => wicked_controller,
-                :action     => 'show',
-                :id         => goto_step || params[:id],
-                :only_path  => true
-               }.merge options
-    url_for(options)
+    id = goto_step || params[:id]
+    path_method = "#{wicked_controller_name}_path"
+    send path_method, id, options
   end
 end

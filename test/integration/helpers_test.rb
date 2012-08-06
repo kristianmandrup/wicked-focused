@@ -5,6 +5,7 @@ class HelpersTest < ActiveSupport::IntegrationCase
   test 'next_wizard_path' do
     step = :first
     visit(bar_path(step))
+    assert has_content?('first')
     click_link 'skip'
     assert has_content?('second')
   end

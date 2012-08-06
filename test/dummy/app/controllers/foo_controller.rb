@@ -9,7 +9,7 @@ module FooController
   include Wicked::Wizard  
 
   wizard_action :show do
-    def run
+    wizard do
       skip_step if params[:skip_step]
       render_wizard
     end
