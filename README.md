@@ -1,4 +1,6 @@
-# Wicked
+# Wicked Focused
+
+This gem is [wicked](https://github.com/schneems/wicked) tweaked for use with [focused controller](https://github.com/jonleighton/focused_controller).
 
 [![Build Status](https://secure.travis-ci.org/schneems/wicked.png)](http://travis-ci.org/schneems/wicked)
 
@@ -13,7 +15,7 @@ Many times I'm left wanting a RESTful way to display a step by step process that
 Add this to your Gemfile
 
 ```ruby
-  gem 'wicked'
+  gem 'wicked-focused'
 ```
 
 Then run `bundle install` and you're ready to start
@@ -44,40 +46,41 @@ Next include `Wicked::Wizard` in your controller
 
 ```ruby
 
-  class AfterSignupController < ApplicationController
-    include Wicked::Wizard
+  class AfterSignupController
+    # base Wizard Action class of Controller must be called 'Action'
+    # and must include of Wizard::Action
+    class Action < FocusedAction
+      include Wizard::Action
 
-    steps :confirm_password, :confirm_profile, :find_friends
-    # ...
+      steps :confirm_password, :confirm_profile, :find_friends    
+    end
 
-```
-
-You can also use the old way of inheriting from `Wicked::WizardController`.
-
-```ruby
-
-  class AfterSignupController < Wicked::WizardController
-
-    steps :confirm_password, :confirm_profile, :find_friends
-    # ...
+    # creates Focused Action :index 
+    # calls #wizard_actions macro to generate wizard actions for all steps defined in Action class
+    include Wicked::Wizard 
 
 ```
 
 The wizard is set to call steps in order in the show action, you can specify custom logic in your show using a case statement like below. To send someone to the first step in this wizard we can direct them to `after_signup_path(:confirm_password)`.
 
 ```ruby
-  class AfterSignupController < ApplicationController
-    include Wicked::Wizard
+class AfterSignupController
+    class Action < FocusedAction
+      include Wizard::Action
 
-    steps :confirm_password, :confirm_profile, :find_friends
+      steps :confirm_password, :confirm_profile, :find_friends    
+    end
+    include Wicked::Wizard 
 
-    def show
-      @user = current_user
-      case step
-      when :find_friends
-        @friends = @user.find_friends
+    wizard_action :show do
+      def run
+        @user = current_user
+        case step
+        when :find_friends
+          @friends = @user.find_friends
+        end
+        render_wizard
       end
-      render_wizard
     end
   end
 ```
@@ -104,19 +107,24 @@ In addition to showing sequential views we can update elements in our controller
 
 
 ```ruby
-  class AfterSignupController < ApplicationController
-    include Wicked::Wizard
+class AfterSignupController
+    class Action < FocusedAction
+      include Wizard::Action
 
-    steps :confirm_password, :confirm_profile, :find_friends
+      steps :confirm_password, :confirm_profile, :find_friends    
+    end
+    include Wicked::Wizard 
 
-    def update
-      @user = current_user
-      case step
-      when :confirm_password
-        @user.update_attributes(params[:user])
+    wizard_action :update do
+      def run
+        @user = current_user
+        case step
+        when :confirm_password
+          @user.update_attributes(params[:user])
+        end
+        sign_in(@user, :bypass => true) # needed for devise
+        render_wizard @user
       end
-      sign_in(@user, :bypass => true) # needed for devise
-      render_wizard @user
     end
   end
 ```
@@ -144,7 +152,7 @@ In the controller if you find that you want to skip a step, you can do it simply
 
 ```ruby
 
-  def show
+  wizard_action :show do
     @user = current_user
     case step
     when :find_friends
@@ -205,7 +213,7 @@ Don't forget to create your named views
 
 # Finish Wizard Path
 
-You can specify the url that your user goes to by over-riding the `finish_wizard_path` in your wizard controller.
+You can specify the url that your user goes to by over-riding the `finish_wizard_path` in your wizard controller action.
 
 
 ```

@@ -1,13 +1,19 @@
 ## This controller uses inheritance
 
-class FooController < Wicked::WizardController
-  steps :first, :second, :last_step
+module FooController
+  class Action < FocusedAction
+    include Wicked::Action
 
-  def show
-    skip_step if params[:skip_step]
-    render_wizard
+    steps :first, :second, :last_step
+  end
+  include Wicked::Wizard  
+
+  wizard_action :show do
+    def run
+      skip_step if params[:skip_step]
+      render_wizard
+    end
   end
 
-  def update
-  end
+  wizard_action :update
 end

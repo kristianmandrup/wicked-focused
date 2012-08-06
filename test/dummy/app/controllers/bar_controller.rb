@@ -1,14 +1,19 @@
 ## This controller uses includes
 
-class BarController < ApplicationController
-  include Wicked::Wizard
-  steps :first, :second, :last_step
+module BarController
+  class Action < FocusedAction
+    include Wicked::Action
 
-  def show
-    skip_step if params[:skip_step]
-    render_wizard
+    steps :first, :second, :last_step
+  end
+  include Wicked::Wizard  
+
+  wizard_action :show do
+    run do
+      skip_step if params[:skip_step]
+      render_wizard
+    end
   end
 
-  def update
-  end
+  focused_action :update
 end

@@ -44,11 +44,13 @@ module Wicked::Controller::Concerns::Steps
   end
 
   module ClassMethods
+    attr_reader :wizard_steps
+
     def steps(*args)
       options = args.last.is_a?(Hash) ? callbacks.pop : {}
       steps   = args
       prepend_before_filter(options) do
-        self.steps = steps
+        @wizard_steps = steps
       end
     end
   end
@@ -63,8 +65,8 @@ module Wicked::Controller::Concerns::Steps
   alias :wizard_steps :steps
   alias :steps_list   :steps
 
-  def previous_step(current_step = nil)
-    return @previous_step if current_step == nil
+  def get_previous_step(current_step = nil)
+    return previous_step if current_step == nil
     index =  steps.index(current_step)
     step  =  steps.at(index - 1) if index.present? && index != 0
     step ||= steps.first
@@ -72,8 +74,8 @@ module Wicked::Controller::Concerns::Steps
   end
 
 
-  def next_step(current_step = nil)
-    return @next_step if current_step == nil
+  def get_next_step(current_step = nil)
+    return next_step if current_step == nil
     index = steps.index(current_step)
     step  = steps.at(index + 1) if index.present?
     step  ||= :finish

@@ -1,22 +1,26 @@
 ## This controller uses includes
 
-class JumpController < ApplicationController
-  include Wicked::Wizard
-  steps :first, :second, :last_step
+module JumpController
+  class Action < FocusedAction
+    include Wicked::Action
 
-  def show
-    skip_step if params[:skip_step]
-    jump_to :last_step if params[:jump_to]
-    if params[:resource]
-      value = params[:resource][:save] == 'true'
-      @bar  = Bar.new(value)
-      render_wizard(@bar)
-    else
-      render_wizard
+    steps :first, :second, :last_step
+  end
+  include Wicked::Wizard  
+
+  wizard_action :show do
+    run do
+      skip_step if params[:skip_step]
+      jump_to :last_step if params[:jump_to]
+      if params[:resource]
+        value = params[:resource][:save] == 'true'
+        @bar  = Bar.new(value)
+        render_wizard(@bar)
+      else
+        render_wizard
+      end
     end
   end
 
-  def update
-  end
-
+  wizard_action :update
 end

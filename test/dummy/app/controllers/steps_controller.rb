@@ -1,13 +1,18 @@
 ## This controller uses includes
 
-class StepPositionsController < ApplicationController
-  include Wicked::Wizard
-  steps :first, :second, :last_step
+module StepPositionsController
+  class Action < FocusedAction
+    include Wicked::Action
 
-  def show
-    render_wizard
+    steps :first, :second, :last_step
+  end
+  include Wicked::Wizard  
+
+  wizard_action :show do
+    run do
+      render_wizard
+    end
   end
 
-  def update
-  end
+  wizard_action :update
 end

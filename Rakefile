@@ -26,7 +26,7 @@ task :default => :test
 
 Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title    = 'Wicked'
+  rdoc.title    = 'Wicked Focused'
   rdoc.options << '--line-numbers' << '--inline-source'
   rdoc.rdoc_files.include('README.rdoc')
   rdoc.rdoc_files.include('lib/**/*.rb')
@@ -36,11 +36,11 @@ end
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name        = "wicked"
+  gem.name        = "wicked-focused"
   gem.homepage    = "http://github.com/schneems/wicked"
   gem.license     = "MIT"
-  gem.summary     = %Q{Use Wicked to turn your controller into a wizard}
-  gem.description = %Q{Wicked is a Rails engine for producing easy wizard controllers}
+  gem.summary     = %Q{Use Wicked to turn your Focused Controller into a wizard}
+  gem.description = %Q{Wicked is a Rails engine for producing easy Focused Controller based wizards}
   gem.email       = "richard.schneeman@gmail.com"
   gem.authors     = ["schneems"]
   # dependencies defined in Gemfile
