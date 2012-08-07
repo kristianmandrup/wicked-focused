@@ -10,7 +10,7 @@ module JumpController
 
   wizard_action :show do
     wizard do
-      skip_step if params[:skip_step]
+      # skip_step if skip_step?
       jump_to :last_step if params[:jump_to]
       if params[:resource]
         value = params[:resource][:save] == 'true'

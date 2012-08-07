@@ -10,7 +10,7 @@ module FooController
 
   wizard_action :show do
     wizard do
-      skip_step if params[:skip_step]
+      # skip_step if skip_step?
       render_wizard
     end
   end

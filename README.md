@@ -116,7 +116,6 @@ class AfterSignupController
 
   wizard_action :show do
     wizard do
-      skip_step if params[:skip_step]
       render_wizard
     end
   end  
@@ -187,11 +186,19 @@ Created the Focused Controller action base class, from which any Wizard Action c
 
 `wizard_action name, &block` 
 
-Creates a Focused Controller action class inheriting from the base action class of the controller. The block contains the class definition. The wizard actions are `show` and `update`. To further abstract this, the shorthand macros: `show_wizard` and `update_wizard` are also available.
+Creates a Focused Controller action class inheriting from the base action class of the controller. The block contains the class definition. The wizard actions are `show` and `update`. To further abstract this, the shorthand macros: `show_wizard &block` and `update_wizard &block` are also available.
 
-`wizard`
+`wizard &block`
 
-Creates a `#run` method as "required" by a Focused Controller action class. The run method generated calls `super()` which calls `setup_wizard` and also auto-handles redirects.
+Creates a `#run` method as "required" by a Focused Controller action class. 
+
+The run method generated also:
+
+* calls `super()` which calls `setup_wizard`
+* auto-handles redirects to first or last step (*)
+* skips step (*)
+
+(*) if params indicate this is requested behavior
 
 *View/URL Helpers*
 

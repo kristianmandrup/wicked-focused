@@ -20,10 +20,15 @@ module Wicked
       setup_wizard      
     end
 
+    def skip_step?
+      params[:skip_step]
+    end
+
     module ClassMethods
       def wizard &block
         define_method :run do
           wizard_redirect and return if super()
+          skip_step if skip_step?
           instance_eval &block
         end
       end
