@@ -42,6 +42,18 @@ module Wicked
       @redirect_path
     end
 
+    def command_for name
+      command! name if command_step?(name)
+    end
+
+    def command_step? name
+      command_steps.include? name.to_sym
+    end
+
+    def command_steps
+      @command_steps ||= self.class.superclass.command_steps
+    end
+
     def wizard_redirect
       redirect_to @redirect_path if @redirect_path
     end

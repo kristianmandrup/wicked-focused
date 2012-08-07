@@ -155,6 +155,14 @@ In the controller if you find that you want to skip a step, you can do it simply
 
 ```ruby
 
+  wicked_base_action do
+    steps :why_us, :subscribe, :login, :payment
+
+    optional_steps: why_us # allow skip
+    command_steps :subscribe, :login, :payment
+  end    
+
+
   show_wizard do
     wizard do
       @user = current_user
@@ -173,6 +181,22 @@ In the controller if you find that you want to skip a step, you can do it simply
 ```
 
 Now you've got a fully functioning AfterSignup controller! If you have questions or if you struggled with something, let me know on [twitter](http://twitter.com/schneems), and i'll try to make it better or make the docs better.
+
+## Using the Command pattern
+
+To better encapsulate Business logic, it is recommended for Controllers to create and perform commands. This can fx be done using the [imperator](https://github.com/Agowan/imperator) gem.
+
+```ruby
+
+  show_wizard do
+    wizard do
+      @user = current_user
+      skip_step if !command_step? step # skip if step not mapped to a command
+      command_for step # execute command of same name as step
+      render_wizard
+    end
+  end
+```
 
 ## Quick Reference
 
