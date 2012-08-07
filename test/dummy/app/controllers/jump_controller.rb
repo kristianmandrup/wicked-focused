@@ -22,5 +22,10 @@ module JumpController
     end
   end
 
-  wizard_action :update
+  wizard_action :update do
+    wizard do
+      # update code here!
+      render_wizard
+    end
+  end    
 end

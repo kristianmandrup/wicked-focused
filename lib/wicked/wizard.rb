@@ -21,6 +21,14 @@ module Wicked
       def wizard_action action, &block
         focused_action action, "#{self.name}::Action".constantize, &block
       end
+
+      def show_wizard &block
+        focused_action :show, "#{self.name}::Action".constantize, &block
+      end
+
+      def update_wizard &block
+        focused_action :update, "#{self.name}::Action".constantize, &block
+      end
     end
   end
 end
