@@ -20,10 +20,6 @@ module Wicked
       setup_wizard      
     end
 
-    def skip_step?
-      params[:skip_step]
-    end
-
     module ClassMethods
       def wizard &block
         define_method :run do

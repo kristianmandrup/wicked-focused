@@ -5,6 +5,9 @@ module FooController
     include Wicked::Action
 
     steps :first, :second, :last_step
+
+    # alias: allow_skip_for
+    optional_steps :first
   end
   include Wicked::Wizard  
 

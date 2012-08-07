@@ -25,6 +25,12 @@ class InheritNavigationTest < ActiveSupport::IntegrationCase
     assert has_content?('second')
   end
 
+  test 'not allowed to skip second' do
+    step = :second
+    visit(foo_path(step.to_s, :skip_step => 'true'))
+    assert has_content?('second')
+  end    
+
   test 'invalid step' do
     step = :notastep
     assert_raise(ActionView::MissingTemplate) do

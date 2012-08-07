@@ -44,7 +44,7 @@ module Wicked::Controller::Concerns::Steps
   end
 
   module ClassMethods
-    attr_reader :wizard_steps
+    attr_reader :wizard_steps, :skip_steps
 
     def steps(*args)
       options = args.last.is_a?(Hash) ? callbacks.pop : {}
@@ -54,6 +54,11 @@ module Wicked::Controller::Concerns::Steps
         self.steps = steps
       end
     end
+
+    def allow_skip_for(*args)
+      @skip_steps = args
+    end
+    alias :optional_steps :allow_skip_for
   end
 
   def steps=(wizard_steps)
@@ -65,6 +70,13 @@ module Wicked::Controller::Concerns::Steps
   end
   alias :wizard_steps :steps
   alias :steps_list   :steps
+
+  def skip_step?
+    return false unless params[:skip_step]
+    skip_steps = self.class.superclass.skip_steps
+    return true if skip_steps.blank?
+    skip_steps.include? step.to_sym
+  end
 
   def previous_step(current_step = nil)
     return previous_step if current_step == nil
