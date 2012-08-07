@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "wicked-focused"
-  s.version = "0.2.0"
+  s.version = "0.2.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["kristianmandrup", "schneems"]
-  s.date = "2012-08-06"
+  s.date = "2012-08-07"
   s.description = "Rails engine for producing Focused Controller based wizards"
   s.email = "kmandrup@gmail.com"
   s.extra_rdoc_files = [
